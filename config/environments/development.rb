@@ -75,6 +75,8 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
   # Allow GitHub Codespaces domains and port forwarding in development
   config.hosts.clear
+  # Allow Codespaces reverse-proxy (disable origin check for port forwarding)
+  config.action_controller.forgery_protection_origin_check = false
   # Allow web-console in Codespaces
   config.web_console.permissions = %w[0.0.0.0/0 ::/0]
 end
