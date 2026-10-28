@@ -1,3 +1,11 @@
+<!-- Flash Messages -->
+<% if notice %>
+  <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i> <%= notice %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
+
 <div class="row g-4 mb-4">
   <div class="col-12">
     <div class="hero-card p-4 p-md-5">
@@ -11,21 +19,118 @@
         </span>
       </div>
       <p class="lead text-light opacity-75 mb-4">
-        A lightweight, container-ready Ruby on Rails 7 application powered by SQLite, styled with Bootstrap 5, and accelerated by jQuery.
+        A container-ready Ruby on Rails 7 application powered by <strong>SQLite</strong>, styled with <strong>Bootstrap 5</strong>, and enhanced with <strong>jQuery</strong>.
       </p>
       
       <!-- Tech Stack Badges -->
       <div class="d-flex flex-wrap gap-2">
         <span class="badge bg-danger text-white"><i class="bi bi-gem me-1"></i> Ruby <%= @ruby_version %></span>
         <span class="badge bg-danger-subtle text-danger"><i class="bi bi-layers me-1"></i> Rails <%= @rails_version %></span>
-        <span class="badge bg-info-subtle text-info"><i class="bi bi-database me-1"></i> <%= @db_status %></span>
+        <span class="badge bg-info text-white"><i class="bi bi-database me-1"></i> <%= @db_status %></span>
         <span class="badge bg-primary-subtle text-primary"><i class="bi bi-bootstrap me-1"></i> Bootstrap 5.3</span>
-        <span class="badge bg-warning-subtle text-dark"><i class="bi bi-code-slash me-1"></i> jQuery <span id="jquery-version-badge">Loading...</span></span>
+        <span class="badge bg-warning-subtle text-dark"><i class="bi bi-code-slash me-1"></i> jQuery 3.7.1</span>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ============================================== -->
+<!-- PROMINENT LIVE SQLITE DATABASE CRUD SANDBOX -->
+<!-- ============================================== -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card shadow-sm border-primary-subtle">
+      <div class="card-header bg-primary text-white py-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-database-fill-gear fs-4"></i>
+          <div>
+            <h5 class="mb-0 fw-bold">Live SQLite 3 Database (Read & Write Test)</h5>
+            <small class="opacity-75">File path: <code><%= @db_file %></code></small>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-white text-primary fs-6 px-3 py-2">
+            Total records in DB: <strong id="live-db-count"><%= @task_count %></strong>
+          </span>
+        </div>
+      </div>
+      <div class="card-body p-4">
+        <p class="text-muted mb-4">
+          Any task you add, check, or delete here is <strong>instantly written and persisted in your SQLite database</strong>. You can refresh the browser or restart the server, and all data remains intact!
+        </p>
+
+        <!-- Add Task Form -->
+        <form id="ajax-task-form" class="row g-2 mb-4" action="/tasks" method="POST">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <div class="col-sm-9 col-md-10">
+            <div class="input-group">
+              <span class="input-group-text bg-light"><i class="bi bi-pencil-square"></i></span>
+              <input type="text" name="task[title]" id="task-title-input" class="form-control" placeholder="Write a new task to save directly to SQLite..." required autocomplete="off">
+            </div>
+          </div>
+          <div class="col-sm-3 col-md-2">
+            <button type="submit" id="submit-task-btn" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-1">
+              <i class="bi bi-plus-circle"></i> Add to DB
+            </button>
+          </div>
+        </form>
+
+        <!-- Tasks List Table / Group -->
+        <div class="table-responsive border rounded">
+          <table class="table table-hover align-middle mb-0" id="tasks-table">
+            <thead class="table-light small text-uppercase">
+              <tr>
+                <th style="width: 70px;">Status</th>
+                <th>Task Title (SQLite Record)</th>
+                <th style="width: 180px;">Created At</th>
+                <th style="width: 90px;" class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tasks-list-body">
+              <% if @tasks.empty? %>
+                <tr id="empty-tasks-row">
+                  <td colspan="4" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox fs-3 d-block mb-1"></i> No tasks found in database. Add your first task above!
+                  </td>
+                </tr>
+              <% else %>
+                <% @tasks.each do |task| %>
+                  <tr id="task-row-<%= task.id %>" class="<%= 'table-light opacity-75' if task.completed? %>">
+                    <td>
+                      <button class="btn btn-sm <%= task.completed? ? 'btn-success' : 'btn-outline-secondary' %> toggle-task-btn" data-task-id="<%= task.id %>" title="Toggle status">
+                        <i class="bi <%= task.completed? ? 'bi-check-circle-fill' : 'bi-circle' %>"></i>
+                      </button>
+                    </td>
+                    <td>
+                      <span class="task-title-text <%= 'text-decoration-line-through text-muted' if task.completed? %>">
+                        <%= task.title %>
+                      </span>
+                    </td>
+                    <td class="small text-muted font-monospace">
+                      <%= task.created_at.strftime("%b %d, %H:%M:%S") %>
+                    </td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-outline-danger delete-task-btn" data-task-id="<%= task.id %>" title="Delete from SQLite">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mt-3 text-muted small">
+          <span><i class="bi bi-info-circle me-1"></i> Actions trigger jQuery AJAX requests communicating directly with Rails and SQLite.</span>
+          <span class="text-success"><i class="bi bi-shield-check me-1"></i> SQLite Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Extra Interactive Sandboxes -->
 <div class="row g-4">
   <!-- Feature 1: jQuery Interactive Verification -->
   <div class="col-md-6">
@@ -35,11 +140,11 @@
           <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
           <h5 class="card-title mb-0 fw-semibold">jQuery Test Sandbox</h5>
         </div>
-        <span class="badge bg-light text-dark border" id="jquery-indicator">Checking...</span>
+        <span class="badge bg-success text-white" id="jquery-indicator">Active ($ ready)</span>
       </div>
       <div class="card-body">
         <p class="text-muted small">
-          This widget verifies that <code>jQuery</code> is loaded globally (<code>$</code> and <code>window.jQuery</code>) and works seamlessly with Rails and modern JavaScript.
+          This widget verifies that <code>jQuery</code> is loaded globally (<code>$</code> and <code>window.jQuery</code>) and works seamlessly.
         </p>
 
         <div class="d-flex gap-2 mb-3">
@@ -53,7 +158,7 @@
 
         <div class="alert alert-light border small mb-0">
           <strong>Interactive Event Log:</strong>
-          <ul id="jquery-event-log" class="list-unstyled mb-0 mt-2 font-monospace" style="max-height: 120px; overflow-y: auto;">
+          <ul id="jquery-event-log" class="list-unstyled mb-0 mt-2 font-monospace" style="max-height: 100px; overflow-y: auto;">
             <li class="text-muted">Waiting for user interaction...</li>
           </ul>
         </div>
@@ -61,7 +166,7 @@
     </div>
   </div>
 
-  <!-- Feature 2: Bootstrap 5 Interactive Verification -->
+  <!-- Feature 2: Bootstrap 5 Components -->
   <div class="col-md-6">
     <div class="card card-feature h-100 shadow-sm">
       <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
@@ -77,12 +182,10 @@
         </p>
 
         <div class="d-flex flex-wrap gap-2 mb-3">
-          <!-- Button trigger modal -->
           <button type="button" class="btn btn-outline-primary d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#demoModal">
             <i class="bi bi-window"></i> Open Modal
           </button>
 
-          <!-- Button trigger toast -->
           <button type="button" class="btn btn-outline-success d-inline-flex align-items-center gap-1" id="toastTriggerBtn">
             <i class="bi bi-bell"></i> Trigger Toast
           </button>
@@ -94,61 +197,9 @@
             <span>No Node.js build step needed</span>
           </div>
           <div class="text-muted mt-1">
-            All dependencies are managed cleanly through <code>Rails Importmaps</code> and CDN stylesheets, saving RAM and CPU inside Codespaces.
+            All dependencies are managed cleanly without heavy Webpack/Node overhead, saving RAM inside Codespaces.
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Feature 3: SQLite Status & Database Info -->
-  <div class="col-md-6">
-    <div class="card card-feature h-100 shadow-sm">
-      <div class="card-header bg-white border-bottom py-3">
-        <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-database-fill-check text-info fs-5"></i>
-          <h5 class="card-title mb-0 fw-semibold">SQLite 3 Integration</h5>
-        </div>
-      </div>
-      <div class="card-body">
-        <p class="text-muted small">
-          Zero-configuration file-based database stored inside <code>storage/development.sqlite3</code>:
-        </p>
-
-        <ul class="list-group list-group-flush small">
-          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Adapter</span>
-            <span class="badge bg-secondary">sqlite3</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Server Process Required</span>
-            <span class="badge bg-success">None (In-process)</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Connection Test</span>
-            <span class="badge bg-success"><%= @db_status %></span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Feature 4: GitHub Codespaces Ready Guide -->
-  <div class="col-md-6">
-    <div class="card card-feature h-100 shadow-sm">
-      <div class="card-header bg-white border-bottom py-3">
-        <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-cloud-check-fill text-dark fs-5"></i>
-          <h5 class="card-title mb-0 fw-semibold">How to run in GitHub Codespaces</h5>
-        </div>
-      </div>
-      <div class="card-body">
-        <ol class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
-          <li>Push this repository to GitHub.</li>
-          <li>Click the green <strong>Code</strong> button &rarr; <strong>Codespaces</strong> tab &rarr; <strong>Create codespace on main</strong>.</li>
-          <li>The <code>.devcontainer</code> will automatically run <code>bundle install</code> and <code>bin/rails db:prepare</code>.</li>
-          <li>Run <code>bin/rails s -b 0.0.0.0</code> and Codespaces will instantly open the app in your browser!</li>
-        </ol>
       </div>
     </div>
   </div>
@@ -165,8 +216,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>This modal is rendering via Bootstrap 5.3 JavaScript module loaded through Rails Importmaps!</p>
-        <p class="text-muted small mb-0">It proves that interactive JavaScript components function smoothly without Webpack or complex node bundling pipelines.</p>
+        <p>This modal is rendered with pure Bootstrap 5.3 JavaScript bundle!</p>
+        <p class="text-muted small mb-0">It proves that interactive components function smoothly without any Webpack compilation errors.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -176,74 +227,177 @@
   </div>
 </div>
 
-<!-- Bootstrap Toast Container -->
+<!-- Bootstrap Toast -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
   <div id="demoToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
       <div class="toast-body">
-        <i class="bi bi-check-circle-fill me-1"></i> Hello from Bootstrap Toast & jQuery!
+        <i class="bi bi-check-circle-fill me-1"></i> Hello from Bootstrap Toast!
       </div>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
 </div>
 
-<!-- Inline test script for jQuery and Bootstrap triggers -->
+<!-- jQuery Event Handlers & AJAX CRUD -->
 <script>
-  document.addEventListener("turbo:load", function() {
-    function initJQueryDemo() {
-      if (typeof window.jQuery === "undefined") {
-        setTimeout(initJQueryDemo, 100);
-        return;
+  $(document).ready(function() {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    // Setup AJAX CSRF Token for Rails
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-Token': csrfToken
+      }
+    });
+
+    // 1. AJAX Add Task
+    $('#ajax-task-form').on('submit', function(e) {
+      e.preventDefault();
+      var input = $('#task-title-input');
+      var title = input.val().trim();
+      if (!title) return;
+
+      var btn = $('#submit-task-btn');
+      btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Saving...');
+
+      $.ajax({
+        url: '/tasks.json',
+        method: 'POST',
+        data: { task: { title: title } },
+        success: function(task) {
+          $('#empty-tasks-row').remove();
+
+          var now = new Date();
+          var timeStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ", " + now.toTimeString().split(' ')[0];
+
+          var newRow = $(`
+            <tr id="task-row-${task.id}" class="table-success" style="transition: background-color 1s ease;">
+              <td>
+                <button class="btn btn-sm btn-outline-secondary toggle-task-btn" data-task-id="${task.id}" title="Toggle status">
+                  <i class="bi bi-circle"></i>
+                </button>
+              </td>
+              <td>
+                <span class="task-title-text">${task.title}</span>
+              </td>
+              <td class="small text-muted font-monospace">${timeStr}</td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-danger delete-task-btn" data-task-id="${task.id}" title="Delete from SQLite">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+          `);
+
+          $('#tasks-list-body').prepend(newRow);
+          input.val('');
+
+          // Fade out table-success highlight
+          setTimeout(function() {
+            newRow.removeClass('table-success');
+          }, 1500);
+
+          // Update count
+          var count = parseInt($('#live-db-count').text()) + 1;
+          $('#live-db-count').text(count);
+        },
+        error: function(xhr) {
+          alert("Error saving to database: " + xhr.responseText);
+        },
+        complete: function() {
+          btn.prop('disabled', false).html('<i class="bi bi-plus-circle"></i> Add to DB');
+        }
+      });
+    });
+
+    // 2. AJAX Toggle Task
+    $(document).on('click', '.toggle-task-btn', function() {
+      var btn = $(this);
+      var taskId = btn.data('task-id');
+      var row = $('#task-row-' + taskId);
+      var titleSpan = row.find('.task-title-text');
+      var icon = btn.find('i');
+
+      $.ajax({
+        url: '/tasks/' + taskId + '/toggle.json',
+        method: 'PATCH',
+        success: function(task) {
+          if (task.completed) {
+            btn.removeClass('btn-outline-secondary').addClass('btn-success');
+            icon.removeClass('bi-circle').addClass('bi-check-circle-fill');
+            titleSpan.addClass('text-decoration-line-through text-muted');
+            row.addClass('table-light opacity-75');
+          } else {
+            btn.removeClass('btn-success').addClass('btn-outline-secondary');
+            icon.removeClass('bi-check-circle-fill').addClass('bi-circle');
+            titleSpan.removeClass('text-decoration-line-through text-muted');
+            row.removeClass('table-light opacity-75');
+          }
+        }
+      });
+    });
+
+    // 3. AJAX Delete Task
+    $(document).on('click', '.delete-task-btn', function() {
+      var btn = $(this);
+      var taskId = btn.data('task-id');
+      var row = $('#task-row-' + taskId);
+
+      if (!confirm("Are you sure you want to delete this record from SQLite?")) return;
+
+      $.ajax({
+        url: '/tasks/' + taskId + '.json',
+        method: 'DELETE',
+        success: function() {
+          row.fadeOut(300, function() {
+            $(this).remove();
+            var count = Math.max(0, parseInt($('#live-db-count').text()) - 1);
+            $('#live-db-count').text(count);
+
+            if ($('#tasks-list-body tr').length === 0) {
+              $('#tasks-list-body').html(`
+                <tr id="empty-tasks-row">
+                  <td colspan="4" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox fs-3 d-block mb-1"></i> No tasks found in database. Add your first task above!
+                  </td>
+                </tr>
+              `);
+            }
+          });
+        }
+      });
+    });
+
+    // 4. General jQuery Sandbox Click handler
+    var clickCounter = 0;
+    $("#jquery-click-btn").on("click", function() {
+      clickCounter++;
+      var time = new Date().toLocaleTimeString();
+      var item = $("<li>")
+        .addClass("text-success")
+        .html("<strong>[" + time + "]</strong> Click #" + clickCounter + " registered via jQuery!");
+
+      if (clickCounter === 1) {
+        $("#jquery-event-log").empty();
       }
 
-      var $ = window.jQuery;
-      var counter = 0;
+      $("#jquery-event-log").prepend(item);
+      $(this).fadeOut(80).fadeIn(80);
+    });
 
-      // Update badges
-      $("#jquery-indicator")
-        .removeClass("bg-light text-dark")
-        .addClass("bg-success text-white")
-        .text("Active ($ ready)");
+    $("#jquery-clear-btn").on("click", function() {
+      clickCounter = 0;
+      $("#jquery-event-log").html('<li class="text-muted">Log reset. Waiting for clicks...</li>');
+    });
 
-      $("#jquery-version-badge").text($.fn.jquery);
-
-      // jQuery Button Click Handler
-      $("#jquery-click-btn").off("click").on("click", function() {
-        counter++;
-        var time = new Date().toLocaleTimeString();
-        var item = $("<li>")
-          .addClass("text-success")
-          .html("<strong>[" + time + "]</strong> Click #" + counter + " registered via jQuery!");
-
-        if (counter === 1) {
-          $("#jquery-event-log").empty();
-        }
-
-        $("#jquery-event-log").prepend(item);
-
-        // Flash animation effect
-        $(this).fadeOut(100).fadeIn(100);
-      });
-
-      // Clear button
-      $("#jquery-clear-btn").off("click").on("click", function() {
-        counter = 0;
-        $("#jquery-event-log").html('<li class="text-muted">Log reset. Waiting for clicks...</li>');
-      });
-
-      // Toast trigger
-      $("#toastTriggerBtn").off("click").on("click", function() {
-        var toastEl = document.getElementById("demoToast");
-        if (window.bootstrap && window.bootstrap.Toast) {
-          var toast = new window.bootstrap.Toast(toastEl);
-          toast.show();
-        } else {
-          $(toastEl).fadeIn().delay(2000).fadeOut();
-        }
-      });
-    }
-
-    initJQueryDemo();
+    // 5. Toast trigger
+    $("#toastTriggerBtn").on("click", function() {
+      var toastEl = document.getElementById("demoToast");
+      if (window.bootstrap && window.bootstrap.Toast) {
+        var toast = new window.bootstrap.Toast(toastEl);
+        toast.show();
+      }
+    });
   });
 </script>

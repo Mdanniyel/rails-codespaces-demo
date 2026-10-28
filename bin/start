@@ -18,7 +18,7 @@ bundle check || bundle install
 
 # Ensure database is prepared
 echo "🗄️ Preparing SQLite database..."
-bin/rails db:prepare
+bin/rails db:prepare && bin/rails db:seed
 
 # Start Rails server
 echo "✨ Starting Rails web server on http://0.0.0.0:3000 ..."

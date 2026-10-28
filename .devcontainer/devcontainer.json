@@ -10,7 +10,7 @@
     }
   },
 
-  "postCreateCommand": "sudo rm -f /etc/apt/sources.list.d/yarn.list && sudo apt-get update && sudo apt-get install -y sqlite3 libsqlite3-dev && bundle install && bin/rails db:prepare",
+  "postCreateCommand": "sudo rm -f /etc/apt/sources.list.d/yarn.list && sudo apt-get update && sudo apt-get install -y sqlite3 libsqlite3-dev && bundle install && bin/rails db:prepare && bin/rails db:seed",
 
   "customizations": {
     "vscode": {
