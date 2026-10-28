@@ -19,7 +19,8 @@
       ],
       "settings": {
         "rubyLsp.rubyVersionManager": "none",
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "task.allowAutomaticTasks": "on"
       }
     }
   },
