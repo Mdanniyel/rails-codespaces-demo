@@ -2,13 +2,4 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-// Import Bootstrap JS and attach to window
-import * as bootstrap from "bootstrap"
-window.bootstrap = bootstrap
-
-// Import jQuery and expose globally
-import jQuery from "jquery"
-window.jQuery = jQuery
-window.$ = jQuery
-
-console.log("Application JS loaded! jQuery version:", jQuery.fn.jquery);
+console.log("Application JS loaded. jQuery version:", typeof window.$ !== "undefined" ? window.$.fn.jquery : "N/A");
