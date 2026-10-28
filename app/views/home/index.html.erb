@@ -1,0 +1,249 @@
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <div class="hero-card p-4 p-md-5">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+        <h1 class="display-6 fw-bold mb-0">
+          <i class="bi bi-rocket-takeoff text-warning me-2"></i>
+          Rails + SQLite + Codespaces Starter
+        </h1>
+        <span class="badge bg-primary text-white badge-tech">
+          <i class="bi bi-github me-1"></i> Ready for Codespaces
+        </span>
+      </div>
+      <p class="lead text-light opacity-75 mb-4">
+        A lightweight, container-ready Ruby on Rails 7 application powered by SQLite, styled with Bootstrap 5, and accelerated by jQuery.
+      </p>
+      
+      <!-- Tech Stack Badges -->
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge bg-danger text-white"><i class="bi bi-gem me-1"></i> Ruby <%= @ruby_version %></span>
+        <span class="badge bg-danger-subtle text-danger"><i class="bi bi-layers me-1"></i> Rails <%= @rails_version %></span>
+        <span class="badge bg-info-subtle text-info"><i class="bi bi-database me-1"></i> <%= @db_status %></span>
+        <span class="badge bg-primary-subtle text-primary"><i class="bi bi-bootstrap me-1"></i> Bootstrap 5.3</span>
+        <span class="badge bg-warning-subtle text-dark"><i class="bi bi-code-slash me-1"></i> jQuery <span id="jquery-version-badge">Loading...</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Feature 1: jQuery Interactive Verification -->
+  <div class="col-md-6">
+    <div class="card card-feature h-100 shadow-sm">
+      <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+          <h5 class="card-title mb-0 fw-semibold">jQuery Test Sandbox</h5>
+        </div>
+        <span class="badge bg-light text-dark border" id="jquery-indicator">Checking...</span>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small">
+          This widget verifies that <code>jQuery</code> is loaded globally (<code>$</code> and <code>window.jQuery</code>) and works seamlessly with Rails and modern JavaScript.
+        </p>
+
+        <div class="d-flex gap-2 mb-3">
+          <button id="jquery-click-btn" class="btn btn-primary d-inline-flex align-items-center gap-1">
+            <i class="bi bi-hand-index-thumb"></i> Click Me (jQuery)
+          </button>
+          <button id="jquery-clear-btn" class="btn btn-outline-secondary d-inline-flex align-items-center gap-1">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+          </button>
+        </div>
+
+        <div class="alert alert-light border small mb-0">
+          <strong>Interactive Event Log:</strong>
+          <ul id="jquery-event-log" class="list-unstyled mb-0 mt-2 font-monospace" style="max-height: 120px; overflow-y: auto;">
+            <li class="text-muted">Waiting for user interaction...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2: Bootstrap 5 Interactive Verification -->
+  <div class="col-md-6">
+    <div class="card card-feature h-100 shadow-sm">
+      <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-bootstrap-fill text-primary fs-5"></i>
+          <h5 class="card-title mb-0 fw-semibold">Bootstrap Components</h5>
+        </div>
+        <span class="badge bg-success-subtle text-success border border-success-subtle">BS 5.3 Active</span>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small">
+          Test Bootstrap modals, interactive toasts, and responsive components:
+        </p>
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-outline-primary d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#demoModal">
+            <i class="bi bi-window"></i> Open Modal
+          </button>
+
+          <!-- Button trigger toast -->
+          <button type="button" class="btn btn-outline-success d-inline-flex align-items-center gap-1" id="toastTriggerBtn">
+            <i class="bi bi-bell"></i> Trigger Toast
+          </button>
+        </div>
+
+        <div class="p-3 bg-light rounded small border">
+          <div class="d-flex align-items-center gap-2 text-success fw-semibold">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>No Node.js build step needed</span>
+          </div>
+          <div class="text-muted mt-1">
+            All dependencies are managed cleanly through <code>Rails Importmaps</code> and CDN stylesheets, saving RAM and CPU inside Codespaces.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3: SQLite Status & Database Info -->
+  <div class="col-md-6">
+    <div class="card card-feature h-100 shadow-sm">
+      <div class="card-header bg-white border-bottom py-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-database-fill-check text-info fs-5"></i>
+          <h5 class="card-title mb-0 fw-semibold">SQLite 3 Integration</h5>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small">
+          Zero-configuration file-based database stored inside <code>storage/development.sqlite3</code>:
+        </p>
+
+        <ul class="list-group list-group-flush small">
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Adapter</span>
+            <span class="badge bg-secondary">sqlite3</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Server Process Required</span>
+            <span class="badge bg-success">None (In-process)</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Connection Test</span>
+            <span class="badge bg-success"><%= @db_status %></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 4: GitHub Codespaces Ready Guide -->
+  <div class="col-md-6">
+    <div class="card card-feature h-100 shadow-sm">
+      <div class="card-header bg-white border-bottom py-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-cloud-check-fill text-dark fs-5"></i>
+          <h5 class="card-title mb-0 fw-semibold">How to run in GitHub Codespaces</h5>
+        </div>
+      </div>
+      <div class="card-body">
+        <ol class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
+          <li>Push this repository to GitHub.</li>
+          <li>Click the green <strong>Code</strong> button &rarr; <strong>Codespaces</strong> tab &rarr; <strong>Create codespace on main</strong>.</li>
+          <li>The <code>.devcontainer</code> will automatically run <code>bundle install</code> and <code>bin/rails db:prepare</code>.</li>
+          <li>Run <code>bin/rails s -b 0.0.0.0</code> and Codespaces will instantly open the app in your browser!</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Demo Modal -->
+<div class="modal fade" id="demoModal" tabindex="-1" aria-labelledby="demoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="demoModalLabel">
+          <i class="bi bi-check2-circle text-success me-1"></i> Bootstrap 5 Modal
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This modal is rendering via Bootstrap 5.3 JavaScript module loaded through Rails Importmaps!</p>
+        <p class="text-muted small mb-0">It proves that interactive JavaScript components function smoothly without Webpack or complex node bundling pipelines.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Looks Great!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="demoToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="bi bi-check-circle-fill me-1"></i> Hello from Bootstrap Toast & jQuery!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Inline test script for jQuery and Bootstrap triggers -->
+<script>
+  document.addEventListener("turbo:load", function() {
+    function initJQueryDemo() {
+      if (typeof window.jQuery === "undefined") {
+        setTimeout(initJQueryDemo, 100);
+        return;
+      }
+
+      var $ = window.jQuery;
+      var counter = 0;
+
+      // Update badges
+      $("#jquery-indicator")
+        .removeClass("bg-light text-dark")
+        .addClass("bg-success text-white")
+        .text("Active ($ ready)");
+
+      $("#jquery-version-badge").text($.fn.jquery);
+
+      // jQuery Button Click Handler
+      $("#jquery-click-btn").off("click").on("click", function() {
+        counter++;
+        var time = new Date().toLocaleTimeString();
+        var item = $("<li>")
+          .addClass("text-success")
+          .html("<strong>[" + time + "]</strong> Click #" + counter + " registered via jQuery!");
+
+        if (counter === 1) {
+          $("#jquery-event-log").empty();
+        }
+
+        $("#jquery-event-log").prepend(item);
+
+        // Flash animation effect
+        $(this).fadeOut(100).fadeIn(100);
+      });
+
+      // Clear button
+      $("#jquery-clear-btn").off("click").on("click", function() {
+        counter = 0;
+        $("#jquery-event-log").html('<li class="text-muted">Log reset. Waiting for clicks...</li>');
+      });
+
+      // Toast trigger
+      $("#toastTriggerBtn").off("click").on("click", function() {
+        var toastEl = document.getElementById("demoToast");
+        if (window.bootstrap && window.bootstrap.Toast) {
+          var toast = new window.bootstrap.Toast(toastEl);
+          toast.show();
+        } else {
+          $(toastEl).fadeIn().delay(2000).fadeOut();
+        }
+      });
+    }
+
+    initJQueryDemo();
+  });
+</script>
